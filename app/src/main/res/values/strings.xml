@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ITrequest</string>
+    <string name="button_authorization_text">Авторизация</string>
+    <string name="edit_text_login_hint">Логин</string>
 </resources>
