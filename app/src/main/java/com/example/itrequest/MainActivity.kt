@@ -10,12 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : AppCompatActivity() {
-	override fun onCreate(savedInstanceState: Bundle?) {
+class MainActivity : AppCompatActivity()
+{
+	override fun onCreate(savedInstanceState: Bundle?)
+	{
 		super.onCreate(savedInstanceState)
 		enableEdgeToEdge()
 		setContentView(R.layout.activity_main)
-		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main))
+		{ v, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
@@ -26,6 +29,17 @@ class MainActivity : AppCompatActivity() {
 		val button: Button = findViewById(R.id.Auth)
 		val regex = Regex("^[a-zA-Z]+$")
 		val userCurrent = User()
+		
+		val users = arrayOf(		// задаем пользователей
+			User().apply{
+				login = "progeon"
+				password = "12345"
+			}, User().apply{
+				login = "fr1zen"
+				password = "12345"
+			}
+		)
+		val usersQt = users.size		// количество пользователей
 		
 		button.setOnClickListener {
 			userCurrent.login = userName.text.toString().trim()
