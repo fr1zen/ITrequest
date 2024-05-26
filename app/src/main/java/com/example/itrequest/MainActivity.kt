@@ -25,10 +25,11 @@ class MainActivity : AppCompatActivity() {
 		val userName: EditText = findViewById(R.id.UserName)
 		val button: Button = findViewById(R.id.Auth)
 		val regex = Regex("^[a-zA-Z]+$")
+		val userCurrent = User()
 		
 		button.setOnClickListener {
-			val login = userName.text.toString().trim()
-			if (login.length >= 8 && regex.matches(login))
+			userCurrent.login = userName.text.toString().trim()
+			if (userCurrent.login.length >= R.integer.login_length_min && regex.matches(userCurrent.login))
 				Toast.makeText(this, "Логин подходит", Toast.LENGTH_SHORT).show()
 			else
 			{
