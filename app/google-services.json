@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "52427110233",
+    "project_id": "itrequest-3910e",
+    "storage_bucket": "itrequest-3910e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52427110233:android:d36e160403ef567c823e48",
+        "android_client_info": {
+          "package_name": "Itrequests.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR-lbUL_72m5u0zbbU_A4mO_YGw3JGjxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
