@@ -1,5 +1,8 @@
 <resources>
 	<string name="app_name">ITrequest</string>
-	<string name="button_authorization_text">Авторизация</string>
+	<string name="button_authorization_text">Войти</string>
 	<string name="edit_text_login_hint">Логин</string>
+	<string name="edit_text_password_hint">Пароль</string>
+	<string name="text_view_password_rules">от 8 символов; Английский язык.</string>
+	<string name="Auth_button">Авторизируйтесь</string>
 </resources>

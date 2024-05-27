@@ -26,29 +26,36 @@ class MainActivity : AppCompatActivity()
 		
 		val label = findViewById<TextView>(R.id.MainLabel)
 		val userName: EditText = findViewById(R.id.UserName)
-		val button: Button = findViewById(R.id.Auth)
-		val regex = Regex("^[a-zA-Z]+$")
+		val userPassword: EditText = findViewById(R.id.UserPassword)
+		val authButton: Button = findViewById(R.id.Auth)
+		val passwordSort = Regex("^[a-zA-Z0-9]+$")
 		val userCurrent = User()
 		
 		val users = arrayOf(		// задаем пользователей
 			User().apply{
 				login = "progeon"
-				password = "12345"
+				password = "1234567amz"
+				jobTitle = "manager"
 			}, User().apply{
 				login = "fr1zen"
-				password = "12345"
+				password = "1234567amz"
+				jobTitle = "teacher"
 			}
 		)
 		val usersQt = users.size		// количество пользователей
 		
-		button.setOnClickListener {
+		authButton.setOnClickListener {
 			userCurrent.login = userName.text.toString().trim()
-			if (userCurrent.login.length >= R.integer.login_length_min && regex.matches(userCurrent.login))
+			userCurrent.password = userPassword.text.toString().trim()
+			val minPasswordLength = resources.getInteger(R.integer.password_length_min)
+			val isPasswordValid = userCurrent.password.length >= minPasswordLength && passwordSort.matches(userCurrent.password)
+			val userExists = users.any { it.login == userCurrent.login && it.password == userCurrent.password }
+			
+			if (isPasswordValid && userExists) {
 				Toast.makeText(this, "Логин подходит", Toast.LENGTH_SHORT).show()
-			else
-			{
-				Toast.makeText(this, "Логин не подходит (Английские символы, минимум 8 - символов)", Toast.LENGTH_LONG).show()
-				userName.setText("")
+			} else {
+				Toast.makeText(this, "Пароль или Логин не подходит", Toast.LENGTH_LONG).show()
+				userPassword.setText("")
 			}
 		}
 	}
