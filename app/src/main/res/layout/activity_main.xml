@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.116" />
-
+    
     <EditText
         android:id="@+id/UserName"
         android:layout_width="wrap_content"
@@ -27,6 +27,9 @@
         android:ems="10"
         android:hint="@string/edit_text_login_hint"
         android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHighlight="@color/black"
+        android:textColorHint="#5E5E5E"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
