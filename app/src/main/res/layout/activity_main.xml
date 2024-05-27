@@ -85,5 +85,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/UserPassword"
         app:layout_constraintVertical_bias="0.0" />
+    
+    <TextView
+        android:id="@+id/TVPasswordLength"
+        android:layout_width="214dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/PasswordRule" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

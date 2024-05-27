@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity()
 {
@@ -42,7 +43,8 @@ class MainActivity : AppCompatActivity()
 				jobTitle = "teacher"
 			}
 		)
-		val usersQt = users.size		// количество пользователей
+		
+		val TVPasswordLength: TextView = findViewById(R.id.TVPasswordLength)
 		
 		authButton.setOnClickListener {
 			userCurrent.login = userName.text.toString().trim()
@@ -51,12 +53,27 @@ class MainActivity : AppCompatActivity()
 			val isPasswordValid = userCurrent.password.length >= minPasswordLength && passwordSort.matches(userCurrent.password)
 			val userExists = users.any { it.login == userCurrent.login && it.password == userCurrent.password }
 			
+			CheckPassword(TVPasswordLength, userCurrent.password)
+			
 			if (isPasswordValid && userExists) {
 				Toast.makeText(this, "Логин подходит", Toast.LENGTH_SHORT).show()
 			} else {
 				Toast.makeText(this, "Пароль или Логин не подходит", Toast.LENGTH_LONG).show()
 				userPassword.setText("")
 			}
+		}
+	}
+	
+	//-------------------------------------------------------------------------------------
+	fun CheckPassword(TVPasswordLength: TextView, password: String)
+	{
+		if (password.length != 0)
+		{
+			TVPasswordLength.text = resources.getString(R.string.password_length)
+			if (password.length < R.integer.password_length_min)
+				TVPasswordLength.setTextColor(ContextCompat.getColor(this, R.color.red))
+			else
+				TVPasswordLength.setTextColor(ContextCompat.getColor(this, R.color.green))
 		}
 	}
 }
