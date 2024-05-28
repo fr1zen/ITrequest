@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/main"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#FFD700"
+		tools:context=".ManageActivity"
+		tools:ignore="VisualLintBounds">
+	
+	<TextView
+			android:id="@+id/MainLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:fontFamily="@font/be_vietnam_medium"
+			android:text="@string/label_request"
+			android:textColor="@color/black"
+			android:textSize="25sp"
+			android:textStyle="bold"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0.102" />
+	
+	<Button
+			android:id="@+id/AddList"
+			android:layout_width="224dp"
+			android:layout_height="71dp"
+			android:layout_marginTop="156dp"
+			android:backgroundTint="@color/black"
+			android:text="@string/add_list"
+			android:textSize="22sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.497"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0.91" />
+	
+	<EditText
+			android:id="@+id/ListData"
+			android:layout_width="249dp"
+			android:layout_height="50dp"
+			android:autofillHints=""
+			android:ems="10"
+			android:hint="@string/list_data_insert"
+			android:inputType="text"
+			android:textColor="@color/black"
+			android:textColorHighlight="@color/black"
+			android:textColorHint="#5E5E5E"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0.186"
+			tools:ignore="LabelFor" />
+	
+	<ListView
+			android:id="@+id/AskList"
+			android:layout_width="384dp"
+			android:layout_height="393dp"
+			app:layout_constraintBottom_toTopOf="@+id/AddList"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.481"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/ListData"
+			app:layout_constraintVertical_bias="0.288" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

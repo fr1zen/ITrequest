@@ -1,5 +1,6 @@
 package com.example.itrequest
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -25,24 +26,24 @@ class MainActivity : AppCompatActivity()
 			insets
 		}
 		
-		val label = findViewById<TextView>(R.id.MainLabel)
 		val userName: EditText = findViewById(R.id.UserName)
 		val userPassword: EditText = findViewById(R.id.UserPassword)
-		val authButton: Button = findViewById(R.id.Auth)
+		val authButton: Button = findViewById(R.id.AddList)
 		val passwordSort = Regex("^[a-zA-Z0-9]+$")
 		val userCurrent = User()
-		
-		val users = arrayOf(		// задаем пользователей
-			User().apply{
-				login = "progeon"
-				password = "1234567amz"
-				jobTitle = "manager"
-			}, User().apply{
-				login = "fr1zen"
-				password = "1234567amz"
-				jobTitle = "teacher"
-			}
-		)
+		val dbUser = DbUsers(this, null)
+		val user1 = User().apply {
+			login = "progeon"
+			password = "1234567amz"
+			jobTitle = "manager"
+		}
+		dbUser.addUser(user1)
+		val user2 = User().apply {
+			login = "fr1zen"
+			password = "1234567amz"
+			jobTitle = "teacher"
+		}
+		dbUser.addUser(user2)
 		
 		val TVPasswordLength: TextView = findViewById(R.id.TVPasswordLength)
 		
@@ -51,12 +52,14 @@ class MainActivity : AppCompatActivity()
 			userCurrent.password = userPassword.text.toString().trim()
 			val minPasswordLength = resources.getInteger(R.integer.password_length_min)
 			val isPasswordValid = userCurrent.password.length >= minPasswordLength && passwordSort.matches(userCurrent.password)
-			val userExists = users.any { it.login == userCurrent.login && it.password == userCurrent.password }
+			val users = dbUser.getAllUsers()
+			val userExists = users.find { it.login == userCurrent.login && it.password == userCurrent.password }
 			
 			CheckPassword(TVPasswordLength, userCurrent.password)
 			
-			if (isPasswordValid && userExists) {
-				Toast.makeText(this, "Логин подходит", Toast.LENGTH_SHORT).show()
+			if (isPasswordValid && userExists != null) {
+				if (userExists.jobTitle == "manager"){val mngWin = Intent(this, ManageActivity::class.java); startActivity(mngWin)}
+				if (userExists.jobTitle == "teacher"){Toast.makeText(this, "ТЫ дАУН?)", Toast.LENGTH_LONG).show()}
 			} else {
 				Toast.makeText(this, "Пароль или Логин не подходит", Toast.LENGTH_LONG).show()
 				userPassword.setText("")

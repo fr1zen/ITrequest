@@ -7,4 +7,7 @@
 	<string name="Auth_button">Авторизируйтесь</string>
 	<string name="password_length">длинна более 8 символов</string>
 	<string name="password_symbol_digits">есть буквы и цифры</string>
+	<string name="list_data_insert">Введите текст</string>
+	<string name="add_list">Добавить</string>
+	<string name="label_request">Введите запрос</string>
 </resources>
