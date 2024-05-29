@@ -1,24 +1,44 @@
 package com.example.itrequest
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.room.*
+
+@Dao
+interface RequestDao {
+	@Query("SELECT * FROM requests")
+	fun getAll(): List<Request>
+	
+	@Insert
+	fun insert(request: Request)
+	
+	@Update
+	fun update(request: Request)
+}
+
+@Database(entities = [Request::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
+	abstract fun requestDao(): RequestDao
+}
 
 class ManageActivity : AppCompatActivity() {
 	
-	private val todos: MutableList<String> = mutableListOf()
-	private val details: HashMap<Int, String> = hashMapOf()
+	private lateinit var db: AppDatabase
+	private lateinit var requestDao: RequestDao
+	private lateinit var adapter: ArrayAdapter<String>
+	private val requestTitles: MutableList<String> = mutableListOf()
+	private val requests: MutableList<Request> = mutableListOf()
 	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		enableEdgeToEdge()
 		setContentView(R.layout.activity_manage)
 		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -26,46 +46,63 @@ class ManageActivity : AppCompatActivity() {
 			insets
 		}
 		
+		db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "itrequest-db").build()
+		requestDao = db.requestDao()
+		
 		val listData: EditText = findViewById(R.id.ListData)
 		val askList: ListView = findViewById(R.id.AskList)
 		val addButton: Button = findViewById(R.id.AddList)
 		
-		val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, todos)
+		adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, requestTitles)
 		askList.adapter = adapter
 		
+		loadRequests()
+		
 		askList.setOnItemClickListener { _, _, position, _ ->
-			val text = details[position] ?: todos[position]
-			showDetailDialog(text, position)
+			val selectedRequest = requests[position]
+			val dialogView = layoutInflater.inflate(R.layout.dialog_edit_description, null)
+			val descriptionEditText: EditText = dialogView.findViewById(R.id.Description)
+			descriptionEditText.setText(selectedRequest.description)
+			
+			AlertDialog.Builder(this)
+				.setTitle("Изменить Описание")
+				.setView(dialogView)
+				.setPositiveButton("Сохранить") { dialog, _ ->
+					val updatedDescription = descriptionEditText.text.toString()
+					selectedRequest.description = updatedDescription
+					Thread {
+						requestDao.update(selectedRequest)
+						runOnUiThread { loadRequests() }
+					}.start()
+					dialog.dismiss()
+				}
+				.setNegativeButton("Отменить") { dialog, _ ->
+					dialog.dismiss()
+				}
+				.create()
+				.show()
 		}
 		
 		addButton.setOnClickListener {
 			val text = listData.text.toString().trim()
 			if (text.isNotEmpty()) {
-				adapter.insert(text, 0)
+				val newRequest = Request(title = text, description = "")
+				Thread {
+					requestDao.insert(newRequest)
+					runOnUiThread { loadRequests() }
+				}.start()
 				listData.setText("")
 			}
 		}
 	}
 	
-	private fun showDetailDialog(text: String, position: Int) {
-		val builder = AlertDialog.Builder(this)
-		builder.setTitle("Подробности")
-		
-		val input = EditText(this)
-		input.setText(text)
-		builder.setView(input)
-		
-		builder.setPositiveButton("Сохранить") { dialog, _ ->
-			val newText = input.text.toString()
-			details[position] = newText
-			dialog.dismiss()
-		}
-		
-		builder.setNegativeButton("Отмена") { dialog, _ ->
-			dialog.cancel()
-		}
-		
-		val dialog = builder.create()
-		dialog.show()
+	private fun loadRequests() {
+		Thread {
+			requests.clear()
+			requestTitles.clear()
+			requests.addAll(requestDao.getAll())
+			requestTitles.addAll(requests.map { it.title })
+			runOnUiThread { adapter.notifyDataSetChanged() }
+		}.start()
 	}
 }

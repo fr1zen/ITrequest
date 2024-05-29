@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity()
 		val authButton: Button = findViewById(R.id.AddList)
 		val passwordSort = Regex("^[a-zA-Z0-9]+$")
 		val userCurrent = User()
-		val dbUser = DbUsers(this, null)
+		val dbUser = DbITrequest(this, null)
 		val user1 = User().apply {
 			login = "progeon"
 			password = "1234567amz"
