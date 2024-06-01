@@ -5,5 +5,4 @@ class User
 	lateinit var login: String
 	lateinit var password: String
 	lateinit var jobTitle: String
-	
 }

@@ -32,18 +32,20 @@ class MainActivity : AppCompatActivity()
 		val passwordSort = Regex("^[a-zA-Z0-9]+$")
 		val userCurrent = User()
 		val dbUser = DbITrequest(this, null)
-		val user1 = User().apply {
+		
+		val user_manager = User().apply {
 			login = "progeon"
 			password = "1234567amz"
 			jobTitle = "manager"
 		}
-		dbUser.addUser(user1)
-		val user2 = User().apply {
+		dbUser.addUser(user_manager)
+		
+		val user_teacher = User().apply {
 			login = "fr1zen"
 			password = "1234567amz"
 			jobTitle = "teacher"
 		}
-		dbUser.addUser(user2)
+		dbUser.addUser(user_teacher)
 		
 		val TVPasswordLength: TextView = findViewById(R.id.TVPasswordLength)
 		
@@ -57,10 +59,10 @@ class MainActivity : AppCompatActivity()
 			
 			CheckPassword(TVPasswordLength, userCurrent.password)
 			
-			if (isPasswordValid && userExists != null) {
-				if (userExists.jobTitle == "manager"){val mngWin = Intent(this, ManageActivity::class.java); startActivity(mngWin)}
-				if (userExists.jobTitle == "teacher"){Toast.makeText(this, "ТЫ дАУН?)", Toast.LENGTH_LONG).show()}
-			} else {
+			if (isPasswordValid && userExists != null)
+					startActivity(Intent(this, ManageActivity(userCurrent)::class.java))
+			else
+			{
 				Toast.makeText(this, "Пароль или Логин не подходит", Toast.LENGTH_LONG).show()
 				userPassword.setText("")
 			}

@@ -29,7 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
 	abstract fun requestDao(): RequestDao
 }
 
-class ManageActivity : AppCompatActivity() {
+class ManageActivity(val user: User) : AppCompatActivity() {
 	
 	private lateinit var db: AppDatabase
 	private lateinit var requestDao: RequestDao
@@ -64,29 +64,42 @@ class ManageActivity : AppCompatActivity() {
 			val descriptionEditText: EditText = dialogView.findViewById(R.id.Description)
 			descriptionEditText.setText(selectedRequest.description)
 			
-			AlertDialog.Builder(this)
-				.setTitle("Изменить Описание")
-				.setView(dialogView)
-				.setPositiveButton("Сохранить") { dialog, _ ->
-					val updatedDescription = descriptionEditText.text.toString()
-					selectedRequest.description = updatedDescription
-					Thread {
-						requestDao.update(selectedRequest)
-						runOnUiThread { loadRequests() }
-					}.start()
-					dialog.dismiss()
+			when (user.jobTitle)
+			{
+				"manager" ->
+				{
+					AlertDialog.Builder(this)
+						.setTitle("Изменить Описание")
+						.setView(dialogView)
+						.setPositiveButton("Сохранить") { dialog, _ ->
+							selectedRequest.description = descriptionEditText.text.toString()
+							Thread {
+								requestDao.update(selectedRequest)
+								runOnUiThread { loadRequests() }
+							}.start()
+							dialog.dismiss()
+						}
+						.setNegativeButton("Отменить") { dialog, _ ->
+							dialog.dismiss()
+						}
+						.create()
+						.show()
 				}
-				.setNegativeButton("Отменить") { dialog, _ ->
-					dialog.dismiss()
+				
+				"teacher" ->
+				{
+					AlertDialog.Builder(this)
+					if (selectedRequest.login == "")
+						selectedRequest.login = user.login
 				}
-				.create()
-				.show()
+			}
 		}
 		
 		addButton.setOnClickListener {
 			val text = listData.text.toString().trim()
-			if (text.isNotEmpty()) {
-				val newRequest = Request(title = text, description = "")
+			if (text.isNotEmpty())
+			{
+				val newRequest = Request(title = text, description = "", login = "")
 				Thread {
 					requestDao.insert(newRequest)
 					runOnUiThread { loadRequests() }
