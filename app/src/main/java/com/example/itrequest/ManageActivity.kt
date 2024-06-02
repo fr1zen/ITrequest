@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -37,6 +38,7 @@ class ManageActivity(val user: User) : AppCompatActivity() {
 	private val requestTitles: MutableList<String> = mutableListOf()
 	private val requests: MutableList<Request> = mutableListOf()
 	
+	@SuppressLint("MissingInflatedId")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_manage)
@@ -63,11 +65,13 @@ class ManageActivity(val user: User) : AppCompatActivity() {
 			val dialogView = layoutInflater.inflate(R.layout.dialog_edit_description, null)
 			val descriptionEditText: EditText = dialogView.findViewById(R.id.Description)
 			descriptionEditText.setText(selectedRequest.description)
+			val descriptionAccept: TextView = dialogView.findViewById(R.id.AcceptedRequest)
+			descriptionAccept.text = selectedRequest.login
+			
 			
 			when (user.jobTitle)
 			{
-				"manager" ->
-				{
+				"manager" -> {
 					AlertDialog.Builder(this)
 						.setTitle("Изменить Описание")
 						.setView(dialogView)
@@ -86,14 +90,23 @@ class ManageActivity(val user: User) : AppCompatActivity() {
 						.show()
 				}
 				
-				"teacher" ->
-				{
+				"teacher" -> {
 					AlertDialog.Builder(this)
-					if (selectedRequest.login == "")
-						selectedRequest.login = user.login
-				}
+						.setTitle("Подробности")
+						.setView(dialogView)
+						.setPositiveButton("Принять") { dialog, _ ->
+							selectedRequest.login = user.login
+							Thread {
+								requestDao.update(selectedRequest)
+								runOnUiThread { loadRequests() }
+							}.start()
+							dialog.dismiss()
+						}
+						.create()
+						.show()
+						}
+					}
 			}
-		}
 		
 		addButton.setOnClickListener {
 			val text = listData.text.toString().trim()

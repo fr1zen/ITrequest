@@ -60,6 +60,7 @@ class DbITrequest(val context: Context, factory: SQLiteDatabase.CursorFactory?):
 		val values = ContentValues()
 		values.put("title", request.title)
 		values.put("description", request.description)
+		values.put("login", request.login)
 		
 		val db = this.writableDatabase
 		db.insert("requests", null, values)
@@ -76,7 +77,8 @@ class DbITrequest(val context: Context, factory: SQLiteDatabase.CursorFactory?):
 				val request = Request(
 					id = cursor.getInt(cursor.getColumnIndexOrThrow("id")),
 					title = cursor.getString(cursor.getColumnIndexOrThrow("title")),
-					description = cursor.getString(cursor.getColumnIndexOrThrow("description"))
+					description = cursor.getString(cursor.getColumnIndexOrThrow("description")),
+					login = cursor.getString(cursor.getColumnIndexOrThrow("login"))
 				)
 				requests.add(request)
 			} while (cursor.moveToNext())
@@ -91,6 +93,7 @@ class DbITrequest(val context: Context, factory: SQLiteDatabase.CursorFactory?):
 		val values = ContentValues()
 		values.put("title", request.title)
 		values.put("description", request.description)
+		values.put("login", request.login)
 		
 		val db = this.writableDatabase
 		db.update("requests", values, "id = ?", arrayOf(request.id.toString()))
