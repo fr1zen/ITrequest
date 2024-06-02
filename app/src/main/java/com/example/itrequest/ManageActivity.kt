@@ -30,8 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
 	abstract fun requestDao(): RequestDao
 }
 
-class ManageActivity(val user: User) : AppCompatActivity() {
-	
+class ManageActivity : AppCompatActivity() {
 	private lateinit var db: AppDatabase
 	private lateinit var requestDao: RequestDao
 	private lateinit var adapter: ArrayAdapter<String>
@@ -48,6 +47,7 @@ class ManageActivity(val user: User) : AppCompatActivity() {
 			insets
 		}
 		
+		val dbUserCurrent = DbITrequest(this, null, "user_current")
 		db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "itrequest-db").build()
 		requestDao = db.requestDao()
 		
@@ -68,8 +68,11 @@ class ManageActivity(val user: User) : AppCompatActivity() {
 			val descriptionAccept: TextView = dialogView.findViewById(R.id.AcceptedRequest)
 			descriptionAccept.text = selectedRequest.login
 			
+			val users = dbUserCurrent.getAllUsers()
+			val size = users.size
+			val userCurrent = users.get(size - 1)
 			
-			when (user.jobTitle)
+			when (userCurrent.jobTitle)
 			{
 				"manager" -> {
 					AlertDialog.Builder(this)
@@ -95,7 +98,7 @@ class ManageActivity(val user: User) : AppCompatActivity() {
 						.setTitle("Подробности")
 						.setView(dialogView)
 						.setPositiveButton("Принять") { dialog, _ ->
-							selectedRequest.login = user.login
+							selectedRequest.login = userCurrent.login
 							Thread {
 								requestDao.update(selectedRequest)
 								runOnUiThread { loadRequests() }
@@ -104,9 +107,10 @@ class ManageActivity(val user: User) : AppCompatActivity() {
 						}
 						.create()
 						.show()
-						}
-					}
+				}
 			}
+			
+		}
 		
 		addButton.setOnClickListener {
 			val text = listData.text.toString().trim()

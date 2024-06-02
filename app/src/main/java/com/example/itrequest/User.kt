@@ -1,8 +1,5 @@
 package com.example.itrequest
 
-class User
+class User(val login: String, val password: String, var jobTitle: String)
 {
-	lateinit var login: String
-	lateinit var password: String
-	lateinit var jobTitle: String
 }

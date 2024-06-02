@@ -30,28 +30,16 @@ class MainActivity : AppCompatActivity()
 		val userPassword: EditText = findViewById(R.id.UserPassword)
 		val authButton: Button = findViewById(R.id.AddList)
 		val passwordSort = Regex("^[a-zA-Z0-9]+$")
-		val userCurrent = User()
-		val dbUser = DbITrequest(this, null)
+		val dbUser = DbITrequest(this, null, "users")
+		val dbUserCurrent = DbITrequest(this, null, "user_current")
 		
-		val user_manager = User().apply {
-			login = "progeon"
-			password = "1234567amz"
-			jobTitle = "manager"
-		}
-		dbUser.addUser(user_manager)
-		
-		val user_teacher = User().apply {
-			login = "fr1zen"
-			password = "1234567amz"
-			jobTitle = "teacher"
-		}
-		dbUser.addUser(user_teacher)
+		dbUser.addUser(User("progeon","1234567amz", "manager"))
+		dbUser.addUser(User("fr1zen","1234567amz", "teacher"))
 		
 		val TVPasswordLength: TextView = findViewById(R.id.TVPasswordLength)
 		
 		authButton.setOnClickListener {
-			userCurrent.login = userName.text.toString().trim()
-			userCurrent.password = userPassword.text.toString().trim()
+			val userCurrent = User(userName.text.toString().trim(), userPassword.text.toString().trim(), "")
 			val minPasswordLength = resources.getInteger(R.integer.password_length_min)
 			val isPasswordValid = userCurrent.password.length >= minPasswordLength && passwordSort.matches(userCurrent.password)
 			val users = dbUser.getAllUsers()
@@ -60,7 +48,10 @@ class MainActivity : AppCompatActivity()
 			CheckPassword(TVPasswordLength, userCurrent.password)
 			
 			if (isPasswordValid && userExists != null)
-					startActivity(Intent(this, ManageActivity(userCurrent)::class.java))
+			{
+				dbUserCurrent.addUser(userCurrent)
+				startActivity(Intent(this, ManageActivity::class.java))
+			}
 			else
 			{
 				Toast.makeText(this, "Пароль или Логин не подходит", Toast.LENGTH_LONG).show()

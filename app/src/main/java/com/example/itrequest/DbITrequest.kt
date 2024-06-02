@@ -5,12 +5,12 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DbITrequest(val context: Context, factory: SQLiteDatabase.CursorFactory?):
-				SQLiteOpenHelper(context, "Users", factory, 1)
+class DbITrequest(val context: Context, factory: SQLiteDatabase.CursorFactory?, val name: String):
+				SQLiteOpenHelper(context, name, factory, 1)
 {
 	override fun onCreate(db: SQLiteDatabase?)
 	{
-		val userQuery = "CREATE TABLE users (login TEXT, password TEXT, jobTitle TEXT)"
+		val userQuery = "CREATE TABLE " + name + " (login TEXT, password TEXT, jobTitle TEXT)"
 		val requestQuery = "CREATE TABLE requests (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, description TEXT)"
 		db!!.execSQL(userQuery)
 		db.execSQL(requestQuery)
@@ -18,7 +18,7 @@ class DbITrequest(val context: Context, factory: SQLiteDatabase.CursorFactory?):
 	
 	override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int)
 	{
-		db!!.execSQL("DROP TABLE IF EXISTS users")
+		db!!.execSQL("DROP TABLE IF EXISTS " + name)
 		db.execSQL("DROP TABLE IF EXISTS requests")
 		onCreate(db)
 	}
@@ -31,23 +31,24 @@ class DbITrequest(val context: Context, factory: SQLiteDatabase.CursorFactory?):
 		values.put("jobTitle", user.jobTitle)
 		
 		val db = this.writableDatabase
-		db.insert("users", null, values)
+		db.insert(name, null, values)
 		db.close()
 	}
 	
 	fun getAllUsers(): List<User> {
 		val users = mutableListOf<User>()
 		val db = this.readableDatabase
-		val cursor = db.rawQuery("SELECT * FROM users", null)
+		val cursor = db.rawQuery("SELECT * FROM name", null)
 		
-		if (cursor.moveToFirst()) {
-			do {
-				val user = User().apply {
-					login = cursor.getString(cursor.getColumnIndexOrThrow("login"))
-					password = cursor.getString(cursor.getColumnIndexOrThrow("password"))
-					jobTitle = cursor.getString(cursor.getColumnIndexOrThrow("jobTitle"))
-				}
-				users.add(user)
+		if (cursor.moveToFirst())
+		{
+			do
+			{
+				val login: String = cursor.getString(cursor.getColumnIndexOrThrow("login"))
+				val password: String = cursor.getString(cursor.getColumnIndexOrThrow("password"))
+				val jobTitle: String = cursor.getString(cursor.getColumnIndexOrThrow("jobTitle"))
+				
+				users.add(User(login, password, jobTitle))
 			} while (cursor.moveToNext())
 		}
 		
