@@ -30,8 +30,7 @@ class MainActivity : AppCompatActivity()
 		val userPassword: EditText = findViewById(R.id.UserPassword)
 		val authButton: Button = findViewById(R.id.AddList)
 		val passwordSort = Regex("^[a-zA-Z0-9]+$")
-		val dbUser = DbITrequest(this, null, "users")
-		val dbUserCurrent = DbITrequest(this, null, "user_current")
+		val dbUser = DbITrequest(this, null)
 		
 		dbUser.addUser(User("progeon","1234567amz", "manager"))
 		dbUser.addUser(User("fr1zen","1234567amz", "teacher"))
@@ -49,7 +48,8 @@ class MainActivity : AppCompatActivity()
 			
 			if (isPasswordValid && userExists != null)
 			{
-				dbUserCurrent.addUser(userCurrent)
+				userCurrent.jobTitle = userExists.jobTitle
+				dbUser.addUser(userCurrent)
 				startActivity(Intent(this, ManageActivity::class.java))
 			}
 			else

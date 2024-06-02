@@ -47,7 +47,7 @@ class ManageActivity : AppCompatActivity() {
 			insets
 		}
 		
-		val dbUserCurrent = DbITrequest(this, null, "user_current")
+		val dbUserCurrent = DbITrequest(this, null)
 		db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "itrequest-db").build()
 		requestDao = db.requestDao()
 		
