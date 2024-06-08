@@ -36,6 +36,7 @@ class ManageActivity : AppCompatActivity() {
 	private lateinit var adapter: ArrayAdapter<String>
 	private val requestTitles: MutableList<String> = mutableListOf()
 	private val requests: MutableList<Request> = mutableListOf()
+	var userCurrent = User("", "", "")
 	
 	@SuppressLint("MissingInflatedId")
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +71,7 @@ class ManageActivity : AppCompatActivity() {
 			
 			val users = dbUserCurrent.getAllUsers()
 			val size = users.size
-			val userCurrent = users.get(size - 1)
+			userCurrent = users.get(size - 1)
 			
 			when (userCurrent.jobTitle)
 			{
@@ -109,19 +110,21 @@ class ManageActivity : AppCompatActivity() {
 						.show()
 				}
 			}
-			
 		}
 		
 		addButton.setOnClickListener {
-			val text = listData.text.toString().trim()
-			if (text.isNotEmpty())
+			if (userCurrent.jobTitle == "manager")
 			{
-				val newRequest = Request(title = text, description = "", login = "")
-				Thread {
-					requestDao.insert(newRequest)
-					runOnUiThread { loadRequests() }
-				}.start()
-				listData.setText("")
+				val text = listData.text.toString().trim()
+				if (text.isNotEmpty())
+				{
+					val newRequest = Request(title = text, description = "", login = "")
+					Thread {
+						requestDao.insert(newRequest)
+						runOnUiThread { loadRequests() }
+					}.start()
+					listData.setText("")
+				}
 			}
 		}
 	}
