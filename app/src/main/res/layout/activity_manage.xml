@@ -9,6 +9,20 @@
 		tools:context=".ManageActivity"
 		tools:ignore="VisualLintBounds">
 	
+	<Button
+			android:id="@+id/backWard"
+			android:layout_width="123dp"
+			android:layout_height="49dp"
+			android:backgroundTint="@color/black"
+			android:text="@string/backWard"
+			android:textSize="12sp"
+			app:layout_constraintBottom_toTopOf="@+id/MainLabel"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.013"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_bias="0.272" />
+	
 	<TextView
 			android:id="@+id/MainLabel"
 			android:layout_width="wrap_content"

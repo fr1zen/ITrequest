@@ -10,4 +10,5 @@
 	<string name="list_data_insert">Введите текст</string>
 	<string name="add_list">Добавить</string>
 	<string name="label_request">Введите запрос</string>
+	<string name="backWard">Вернуться</string>
 </resources>

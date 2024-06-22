@@ -1,7 +1,9 @@
 package com.example.itrequest
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -38,7 +40,7 @@ class ManageActivity : AppCompatActivity() {
 	private val requests: MutableList<Request> = mutableListOf()
 	var userCurrent = User("", "", "")
 	
-	@SuppressLint("MissingInflatedId")
+	@SuppressLint("MissingInflatedId", "SetTextI18n")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_manage)
@@ -55,11 +57,28 @@ class ManageActivity : AppCompatActivity() {
 		val listData: EditText = findViewById(R.id.ListData)
 		val askList: ListView = findViewById(R.id.AskList)
 		val addButton: Button = findViewById(R.id.AddList)
+		val backButton: Button = findViewById(R.id.backWard)
+		val label: TextView = findViewById(R.id.MainLabel)
 		
 		adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, requestTitles)
 		askList.adapter = adapter
 		
 		loadRequests()
+		
+		val users = dbUserCurrent.getAllUsers()
+		val size = users.size
+		userCurrent = users.get(size - 1)
+		if (userCurrent.jobTitle == "teacher") {
+			addButton.visibility = View.GONE
+			listData.visibility = View.GONE
+			label.text = "Приветствую " + userCurrent.login
+			
+			
+		}
+		
+		backButton.setOnClickListener{
+			startActivity(Intent(this, MainActivity::class.java))
+		}
 		
 		askList.setOnItemClickListener { _, _, position, _ ->
 			val selectedRequest = requests[position]
@@ -68,10 +87,6 @@ class ManageActivity : AppCompatActivity() {
 			descriptionEditText.setText(selectedRequest.description)
 			val descriptionAccept: TextView = dialogView.findViewById(R.id.AcceptedRequest)
 			descriptionAccept.text = selectedRequest.login
-			
-			val users = dbUserCurrent.getAllUsers()
-			val size = users.size
-			userCurrent = users.get(size - 1)
 			
 			when (userCurrent.jobTitle)
 			{
@@ -102,7 +117,7 @@ class ManageActivity : AppCompatActivity() {
 							selectedRequest.login = userCurrent.login
 							Thread {
 								requestDao.update(selectedRequest)
-								runOnUiThread { loadRequests() }
+								runOnUiThread { loadRequests()}
 							}.start()
 							dialog.dismiss()
 						}
@@ -111,10 +126,7 @@ class ManageActivity : AppCompatActivity() {
 				}
 			}
 		}
-		
 		addButton.setOnClickListener {
-			if (userCurrent.jobTitle == "manager")
-			{
 				val text = listData.text.toString().trim()
 				if (text.isNotEmpty())
 				{
@@ -125,10 +137,8 @@ class ManageActivity : AppCompatActivity() {
 					}.start()
 					listData.setText("")
 				}
-			}
 		}
 	}
-	
 	private fun loadRequests() {
 		Thread {
 			requests.clear()
